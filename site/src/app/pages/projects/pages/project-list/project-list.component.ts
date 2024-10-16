@@ -15,10 +15,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_STATI } from '@wbs/core/models';
+import { Project, PROJECT_STATI } from '@wbs/core/models';
 import { sorter, Storage } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
-import { ProjectViewModel } from '@wbs/core/view-models';
 import {
   ProjectCreateDialogComponent,
   ProjectGridComponent,
@@ -61,7 +60,7 @@ export class ProjectListComponent {
   readonly filterIcon = faFilters;
   readonly plusIcon = faPlus;
   readonly loading = signal(true);
-  readonly projects = signal<ProjectViewModel[]>([]);
+  readonly projects = signal<Project[]>([]);
   readonly userId = input.required<string>();
   readonly orgId = input.required<string>();
   readonly view = signal<ProjectView>(this.getView() ?? 'table');
@@ -134,13 +133,13 @@ export class ProjectListComponent {
   }
 
   private filter(
-    list: ProjectViewModel[],
+    list: Project[],
     userId: string,
     search: string | undefined,
     assignedToMe: boolean,
     stati: PROJECT_STATI[],
     categories: string[]
-  ): ProjectViewModel[] {
+  ): Project[] {
     if (list == null || list.length === 0) return list;
 
     if (search) list = this.filterByName(list, search);
@@ -148,7 +147,7 @@ export class ProjectListComponent {
     if (assignedToMe) {
       list = list.filter(
         (project) =>
-          project.roles?.some((role) => role.user.userId === userId) ?? false
+          project.roles?.some((role) => role.userId === userId) ?? false
       );
     }
     list = this.filterByStati(list, stati);
@@ -162,27 +161,27 @@ export class ProjectListComponent {
   }
 
   private filterByStati(
-    projects: ProjectViewModel[] | null | undefined,
+    projects: Project[] | null | undefined,
     stati: string[]
-  ): ProjectViewModel[] {
+  ): Project[] {
     if (!projects || stati.length === 0) return [];
 
     return projects.filter((x) => stati.includes(x.status));
   }
 
   private filterByCategories(
-    projects: ProjectViewModel[] | null | undefined,
+    projects: Project[] | null | undefined,
     categories: string[]
-  ): ProjectViewModel[] {
+  ): Project[] {
     if (!projects || categories.length === 0) return [];
 
     return projects.filter((x) => categories.includes(x.category));
   }
 
   private filterByName(
-    projects: ProjectViewModel[] | null | undefined,
+    projects: Project[] | null | undefined,
     text: string
-  ): ProjectViewModel[] {
+  ): Project[] {
     return (projects ?? []).filter((x) =>
       (x.title ?? '').toLowerCase().includes(text.toLowerCase())
     );
