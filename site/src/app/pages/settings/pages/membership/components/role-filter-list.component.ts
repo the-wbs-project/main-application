@@ -15,26 +15,38 @@ import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 @Component({
   standalone: true,
   selector: 'wbs-role-filter-list',
-  templateUrl: './role-filter-list.component.html',
-  styleUrls: ['./role-filter-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MultiSelectModule, RoleListPipe, TranslateModule],
+  template: `<kendo-multiselect
+    kendoMultiSelectSummaryTag
+    [checkboxes]="true"
+    [autoClose]="false"
+    [data]="roles"
+    [value]="values()"
+    adaptiveMode="auto"
+    textField="abbreviation"
+    valueField="id"
+    (valueChange)="changed($event)"
+  >
+    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+      {{ dataItems | roleList : true }}
+    </ng-template>
+    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+      <div class="role-item">
+        <span class="d-inline-block wd-80">
+          {{ dataItem.abbreviation | translate }}
+        </span>
+      </div>
+    </ng-template>
+  </kendo-multiselect>`,
 })
 export class RoleFilterListComponent implements OnInit {
   readonly roles = inject(MetadataStore).roles.definitions;
-
-  readonly valueChanged = output<string[]>();
-
   readonly values = signal<Role[]>([]);
+  readonly valueChanged = output<string[]>();
 
   ngOnInit(): void {
     this.values.set(structuredClone(this.roles));
-  }
-
-  onlyRole(e: Event, role: Role): void {
-    e.stopPropagation();
-
-    this.set([role]);
   }
 
   public changed(value: Role[]): void {

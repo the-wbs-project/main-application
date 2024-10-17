@@ -1,13 +1,13 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Invite, ORGANIZATION_CLAIMS, User } from '@wbs/core/models';
+import { Invite, User } from '@wbs/core/models';
 import { MembershipStore } from '@wbs/core/store';
 import { InviteViewModel } from '@wbs/core/view-models';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class MembershipSettingStore {
+export class LaborRatesStore {
   private readonly data = inject(DataServiceFactory);
   private readonly membership = inject(MembershipStore).membership;
 
@@ -17,9 +17,6 @@ export class MembershipSettingStore {
   private readonly _remaining = signal<number | undefined>(undefined);
   private readonly _isLoading = signal<boolean>(true);
   private readonly _canAdd = signal<boolean>(false);
-  private readonly _hasAddAccess = signal<boolean>(false);
-  private readonly _hasUpdateAccess = signal<boolean>(false);
-  private readonly _hasDeleteAccess = signal<boolean>(false);
 
   get capacity(): Signal<number | undefined> {
     return this._capacity;
@@ -31,18 +28,6 @@ export class MembershipSettingStore {
 
   get canAdd(): Signal<boolean> {
     return this._canAdd;
-  }
-
-  get hasAddAccess(): Signal<boolean> {
-    return this._hasAddAccess;
-  }
-
-  get hasUpdateAccess(): Signal<boolean> {
-    return this._hasUpdateAccess;
-  }
-
-  get hasDeleteAccess(): Signal<boolean> {
-    return this._hasDeleteAccess;
   }
 
   get invites(): Signal<InviteViewModel[] | undefined> {
@@ -67,8 +52,7 @@ export class MembershipSettingStore {
     forkJoin({
       members: this.data.memberships.getMembershipUsersAsync(org),
       invites: this.data.invites.getAsync(org, false),
-      claims: this.data.claims.getOrganizationClaimsAsync(org),
-    }).subscribe(({ members, invites, claims }) => {
+    }).subscribe(({ members, invites }) => {
       this.setInvites(invites);
 
       this._members.set(
@@ -87,16 +71,6 @@ export class MembershipSettingStore {
       this._capacity.set(capacity);
       this._remaining.set(remaining);
       this._canAdd.set(remaining === undefined || remaining > 0);
-
-      this._hasAddAccess.set(
-        claims.includes(ORGANIZATION_CLAIMS.MEMBERS.CREATE)
-      );
-      this._hasUpdateAccess.set(
-        claims.includes(ORGANIZATION_CLAIMS.MEMBERS.UPDATE)
-      );
-      this._hasDeleteAccess.set(
-        claims.includes(ORGANIZATION_CLAIMS.MEMBERS.DELETE)
-      );
       this._isLoading.set(false);
     });
   }

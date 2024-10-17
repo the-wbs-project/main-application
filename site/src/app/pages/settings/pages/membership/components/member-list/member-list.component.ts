@@ -6,12 +6,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import {
-  faGear,
-  faPencil,
-  faPlus,
-  faX,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faGear, faPencil, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
 import {
@@ -28,6 +23,17 @@ import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 import { MembershipService, MembershipSettingStore } from '../../services';
 import { EditMemberComponent } from '../edit-member/edit-member.component';
+
+const EDIT_MENU_ITEM = {
+  text: 'General.Edit',
+  icon: faPencil,
+  action: 'edit',
+};
+const REMOVE_MENU_ITEM = {
+  text: 'General.Edit',
+  icon: faPencil,
+  action: 'edit',
+};
 
 @Component({
   standalone: true,
@@ -53,11 +59,22 @@ export class MemberListComponent {
   private readonly store = inject(MembershipSettingStore);
   private readonly tableHelper = inject(TableHelper);
 
+  readonly faGear = faGear;
+  readonly faPlus = faPlus;
+  //
+  //  Inputs
+  //
   readonly filteredRoles = input<string[]>([]);
   readonly textFilter = input<string>('');
+  //
+  //  Models
+  //
   readonly sort = signal<SortDescriptor[]>([
     { field: 'lastLogin', dir: 'desc' },
   ]);
+  //
+  //  Computed
+  //
   readonly filter = computed(() =>
     this.createFilter(this.textFilter(), this.filteredRoles())
   );
@@ -67,20 +84,14 @@ export class MemberListComponent {
       filter: this.filter(),
     })
   );
-  readonly faGear = faGear;
-  readonly faPlus = faPlus;
-  readonly menu = [
-    {
-      text: 'General.Edit',
-      icon: faPencil,
-      action: 'edit',
-    },
-    {
-      text: 'General.Remove',
-      icon: faX,
-      action: 'remove',
-    },
-  ];
+  readonly menu = computed(() => {
+    const list = [];
+
+    if (this.store.hasUpdateAccess()) list.push(EDIT_MENU_ITEM);
+    if (this.store.hasDeleteAccess()) list.push(REMOVE_MENU_ITEM);
+
+    return list;
+  });
 
   userActionClicked(member: User, action: string): void {
     if (action === 'edit') {
