@@ -1,7 +1,6 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChecklistGroupResults } from '../../models';
 import { ChecklistResultClassPipe } from '../../pipes/checklist-result-class.pipe';
@@ -16,7 +15,6 @@ import { ChecklistResultIconPipe } from '../../pipes/checklist-result-icon.pipe'
     ChecklistResultClassPipe,
     ChecklistResultIconPipe,
     FontAwesomeModule,
-    NgbAccordionModule,
     NgClass,
     TranslateModule,
   ],

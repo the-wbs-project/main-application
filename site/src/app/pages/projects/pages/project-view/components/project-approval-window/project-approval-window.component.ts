@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faX } from '@fortawesome/pro-solid-svg-icons';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import {
@@ -39,7 +38,6 @@ import { TaskNamePipe } from '../../pipes/task-name.pipe';
     CheckPipe,
     DatePipe,
     FontAwesomeModule,
-    NgbDropdownModule,
     NgClass,
     ProjectApprovalWindowTitlePipe,
     TaskNamePipe,

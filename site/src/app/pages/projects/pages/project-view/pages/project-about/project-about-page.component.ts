@@ -27,7 +27,6 @@ import { of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { ApprovalBadgeComponent } from '../../components/approval-badge.component';
 import { ProjectApprovalCardComponent } from './components/project-approval-card';
-import { ProjectChecklistComponent } from '../../components/project-checklist';
 import { ProjectDetailsCardComponent } from './components/project-details-card';
 import { ProjectStatusCardComponent } from './components/project-status-card';
 import { ProjectService, ProjectTaskService } from '../../services';
@@ -50,7 +49,6 @@ import { ProjectContributorCardComponent } from './components/contributor-card';
     FindByIdPipe,
     NgClass,
     ProjectApprovalCardComponent,
-    ProjectChecklistComponent,
     ProjectContributorCardComponent,
     ProjectDetailsCardComponent,
     ProjectResourceCardComponent,

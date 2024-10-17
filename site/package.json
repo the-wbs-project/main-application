@@ -37,7 +37,6 @@
     "@fortawesome/pro-regular-svg-icons": "^6.5.2",
     "@fortawesome/pro-solid-svg-icons": "^6.5.2",
     "@fortawesome/pro-thin-svg-icons": "^6.5.2",
-    "@ng-bootstrap/ng-bootstrap": "^17.0.0",
     "@ngneat/until-destroy": "^10.0.0",
     "@ngx-translate/core": "^15.0.0",
     "@ngxs/logger-plugin": "^18.0.0",
