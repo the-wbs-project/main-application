@@ -72,6 +72,29 @@ public class ImportController : ControllerBase
     }
 
     [Authorize]
+    [HttpPost("rates")]
+    public async Task<ActionResult> PostRates()
+    {
+        try
+        {
+            Request.EnableBuffering();
+            Request.Body.Position = 0;
+
+            using (var stream = new MemoryStream())
+            {
+                await Request.Body.CopyToAsync(stream);
+
+                return Ok(mppImporter.GetResources(stream.ToArray()));
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error processing MPP file for rates");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpPost("ai/{owner}/{fileName}")]
     public async Task<IActionResult> PostAi(string owner, string fileName)
     {
