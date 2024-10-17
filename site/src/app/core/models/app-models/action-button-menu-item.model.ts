@@ -11,5 +11,7 @@ export class ActionButtonMenuItem {
   disabled?: boolean;
   isHeader?: boolean;
   cssClass?: string | string[];
+  section?: string;
+  claim?: string;
   items?: ActionButtonMenuItem[];
 }

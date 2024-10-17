@@ -1,17 +1,19 @@
 import { Routes } from '@angular/router';
-import { MemberSettingsService } from './members/services';
-import { MembersSettingStore } from './members/store';
+import { MemberSettingsService } from './membership/services';
+import { MembersSettingStore } from './membership/store';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'members',
+    redirectTo: 'membership',
     pathMatch: 'full',
   },
   {
-    path: 'members',
+    path: 'membership',
     loadComponent: () =>
-      import('./members/members.component').then((m) => m.MembersComponent),
+      import('./membership/membership.component').then(
+        (m) => m.MembershipComponent
+      ),
     providers: [MemberSettingsService, MembersSettingStore],
   },
 ];

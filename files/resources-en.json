@@ -714,6 +714,7 @@
       "InviteCancelled": "Invite Cancelled",
       "ResendInvite": "Resend Invite",
       "ResendInviteConfirm": "Are you sure you want to resend the invite? This will cause the previous invite sent to be invalid.",
+      "Membership": "Membership",
       "MembershipRollup": "Membership Rollup",
       "Capacity": "Capacity",
       "Remaining": "Remaining",

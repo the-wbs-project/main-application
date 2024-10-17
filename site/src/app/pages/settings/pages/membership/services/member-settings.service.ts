@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Invite, User } from '@wbs/core/models';
+import { User } from '@wbs/core/models';
 import { IdService, Messages } from '@wbs/core/services';
 import { MembershipStore, UserStore } from '@wbs/core/store';
+import { InviteViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { MembersSettingStore } from '../store';
-import { InviteViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class MemberSettingsService {

@@ -17,11 +17,8 @@ import { MainContentDirective } from './directives/main-content.directive';
     <div class="d-flex flex-column vh-100">
       <wbs-header
         [claims]="claims()"
-        [org]="org"
-        [orgs]="membershipStore.memberships()!"
         [profile]="profile()!"
         [roles]="membershipStore.siteRoles()!"
-        [activeSection]="activeSection()"
       />
       <div
         appMainContent

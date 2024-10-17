@@ -6,7 +6,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_STATI } from '@wbs/core/models';
@@ -32,10 +31,8 @@ export class ProjectChecklistModalComponent {
     this.store.select(ProjectChecklistState.results)
   );
 
-  constructor(private readonly modalService: NgbModal) {}
-
   open(): void {
-    const modal = this.modalService.open(this.content, {
+    /*const modal = this.modalService.open(this.content, {
       size: 'lg',
       ariaLabelledBy: 'modal-title',
     });
@@ -47,5 +44,6 @@ export class ProjectChecklistModalComponent {
       }
     });
     modal.dismissed.subscribe();
-  }
+  */
+}
 }

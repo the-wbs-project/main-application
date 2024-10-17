@@ -46,28 +46,16 @@
   color: $white;
 }
 
-.tx-facebook {
-  color: #3b5998;
-}
-
-.tx-pinterest {
-  color: #cd2029;
-}
-
-.tx-google-plus {
-  color: #d34836;
-}
-
-.tx-twitter {
-  color: #429cd6;
-}
-
 .tx-black {
   color: $black;
 }
 
 .tx-primary {
   color: $primary;
+}
+
+.tx-primary-f {
+  color: $primary !important;
 }
 
 .tx-success {

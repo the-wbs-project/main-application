@@ -26,7 +26,7 @@ import { MembersSettingStore } from './store';
 
 @Component({
   standalone: true,
-  templateUrl: './members.component.html',
+  templateUrl: './membership.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ButtonModule,
@@ -43,7 +43,7 @@ import { MembersSettingStore } from './store';
     TranslateModule,
   ],
 })
-export class MembersComponent {
+export class MembershipComponent {
   private readonly dialog = inject(DialogService);
   private readonly title = inject(TitleService);
 

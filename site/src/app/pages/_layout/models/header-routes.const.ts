@@ -1,33 +1,24 @@
-import { ORGANIZATION_CLAIMS } from '@wbs/core/models';
-import { HeaderRouteItem } from './header-route-item.model';
+import { ActionButtonMenuItem, ORGANIZATION_CLAIMS } from '@wbs/core/models';
 
-export const HEADER_ROUTE_ITEMS: HeaderRouteItem[] = [
+export const HEADER_ROUTE_ITEMS: ActionButtonMenuItem[] = [
   {
-    type: 'link',
-    label: 'General.Library',
+    resource: 'General.Library',
     section: 'library',
     route: ['/', ':orgId', 'library'],
   },
   {
-    type: 'link',
-    label: 'General.Projects',
+    resource: 'General.Projects',
     section: 'projects',
     route: ['/', ':orgId', 'projects'],
   },
   {
-    type: 'sub',
-    label: 'General.Settings',
+    resource: 'General.Settings',
     section: 'settings',
     claim: ORGANIZATION_CLAIMS.SETTINGS.READ,
     items: [
       {
-        type: 'header',
-        label: 'General.Organizational',
-      },
-      {
-        type: 'link',
-        route: ['/', ':orgId', 'settings', 'members'],
-        label: 'General.Members',
+        route: ['/', ':orgId', 'settings', 'membership'],
+        resource: 'OrgSettings.Membership',
         claim: ORGANIZATION_CLAIMS.MEMBERS.READ,
       },
     ],
