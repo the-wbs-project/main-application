@@ -3,6 +3,7 @@ import {
   Component,
   effect,
   inject,
+  input,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +23,7 @@ import {
   MembershipRollupComponent,
   RoleFilterListComponent,
 } from './components';
-import { MembersSettingStore } from './store';
+import { MembershipSettingStore } from './services';
 
 @Component({
   standalone: true,
@@ -47,9 +48,9 @@ export class MembershipComponent {
   private readonly dialog = inject(DialogService);
   private readonly title = inject(TitleService);
 
-  readonly store = inject(MembersSettingStore);
+  readonly store = inject(MembershipSettingStore);
   readonly roleFilters = signal<string[]>([]);
-  readonly view = signal<'members' | 'invites'>('members');
+  readonly view = input.required<'users' | 'invites'>();
   readonly faPlus = faPlus;
   readonly faSpinner = faSpinner;
 

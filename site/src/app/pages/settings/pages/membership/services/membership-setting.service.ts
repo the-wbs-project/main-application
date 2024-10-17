@@ -6,14 +6,14 @@ import { MembershipStore, UserStore } from '@wbs/core/store';
 import { InviteViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { MembersSettingStore } from '../store';
+import { MembershipSettingStore } from './membership-setting.store';
 
 @Injectable()
-export class MemberSettingsService {
+export class MembershipService {
   private readonly data = inject(DataServiceFactory);
   private readonly membership = inject(MembershipStore).membership;
   private readonly messages = inject(Messages);
-  private readonly store = inject(MembersSettingStore);
+  private readonly store = inject(MembershipSettingStore);
   private readonly profile = inject(UserStore).profile;
 
   removeMemberAsync(memberId: string): void {

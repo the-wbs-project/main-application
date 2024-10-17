@@ -21,7 +21,7 @@ import { SaveButtonComponent } from '@wbs/components/_utils/save-button.componen
 import { Invite, User } from '@wbs/core/models';
 import { SaveService } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
-import { MemberSettingsService } from '../../services';
+import { MembershipService } from '../../services';
 import { InvitationValidators } from './invitation-validators.service';
 
 declare type InviteError = { email?: string; error: string };
@@ -43,7 +43,7 @@ declare type InviteError = { email?: string; error: string };
 })
 export class InvitationDialogComponent extends DialogContentBase {
   private readonly validators = inject(InvitationValidators);
-  private readonly memberService = inject(MemberSettingsService);
+  private readonly memberService = inject(MembershipService);
   private members!: User[];
   private invites!: Invite[];
 

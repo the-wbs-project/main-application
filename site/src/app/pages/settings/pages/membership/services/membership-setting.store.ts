@@ -7,7 +7,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class MembersSettingStore {
+export class MembershipSettingStore {
   private readonly data = inject(DataServiceFactory);
   private readonly membership = inject(MembershipStore).membership;
 

@@ -26,16 +26,15 @@ import { User } from '@wbs/core/models';
 import { Messages, TableHelper } from '@wbs/core/services';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
-import { MemberSettingsService } from '../../services';
-import { MembersSettingStore } from '../../store';
-import { EditMemberComponent } from '../edit-member';
+import { MembershipService, MembershipSettingStore } from '../../services';
+import { EditMemberComponent } from '../edit-member/edit-member.component';
 
 @Component({
   standalone: true,
   selector: 'wbs-member-list',
   templateUrl: './member-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [MemberSettingsService, TableHelper],
+  providers: [MembershipService, TableHelper],
   imports: [
     ActionIconListComponent,
     DateTextPipe,
@@ -49,9 +48,9 @@ import { EditMemberComponent } from '../edit-member';
 })
 export class MemberListComponent {
   private readonly dialog = inject(DialogService);
-  private readonly memberService = inject(MemberSettingsService);
+  private readonly memberService = inject(MembershipService);
   private readonly messages = inject(Messages);
-  private readonly store = inject(MembersSettingStore);
+  private readonly store = inject(MembershipSettingStore);
   private readonly tableHelper = inject(TableHelper);
 
   readonly filteredRoles = input<string[]>([]);

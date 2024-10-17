@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { MembersSettingStore } from '../../store';
+import { MembershipSettingStore } from '../../services';
 
 @Component({
   standalone: true,
@@ -12,6 +12,6 @@ import { MembersSettingStore } from '../../store';
   imports: [FontAwesomeModule, TranslateModule],
 })
 export class MembershipRollupComponent {
-  readonly store = inject(MembersSettingStore);
+  readonly store = inject(MembershipSettingStore);
   readonly faSpinner = faSpinner;
 }
