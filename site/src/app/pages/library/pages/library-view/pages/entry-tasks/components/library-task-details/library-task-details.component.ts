@@ -31,7 +31,6 @@ import { TaskDetailsDescriptionEditorComponent } from '@wbs/components/task-deta
 import { TaskDetailsTitleEditorComponent } from '@wbs/components/task-details-title-editor';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { SaveService } from '@wbs/core/services';
-import { EntryStore } from '@wbs/core/store';
 import { CategoryViewModel, LibraryTaskViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -39,6 +38,7 @@ import {
   LibraryTaskActionService,
   LibraryTaskService,
 } from '../../../../services';
+import { LibraryStore } from '../../../../store';
 import { TaskDetailsResourcesComponent } from '../task-details-resources';
 
 @Component({
@@ -68,7 +68,7 @@ import { TaskDetailsResourcesComponent } from '../task-details-resources';
 export class LibraryTaskDetailsComponent implements OnChanges {
   private readonly actions = inject(LibraryTaskActionService);
   private readonly taskService = inject(LibraryTaskService);
-  readonly entryStore = inject(EntryStore);
+  readonly store = inject(LibraryStore);
 
   readonly addIcon = faPlus;
   readonly editIcon = faPencil;

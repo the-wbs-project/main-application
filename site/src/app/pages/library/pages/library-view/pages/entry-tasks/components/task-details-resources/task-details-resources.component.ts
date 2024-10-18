@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   input,
   OnInit,
@@ -13,7 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { RecordResourceListComponent } from '@wbs/components/record-resources/components/list';
 import { ContentResource } from '@wbs/core/models';
-import { LibraryResourcesService } from '@wbs/pages/library/services';
+import { LibraryResourcesService } from '../../../../services';
 
 @Component({
   standalone: true,

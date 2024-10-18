@@ -51,12 +51,7 @@ import {
   TreeService,
   Utils,
 } from '@wbs/core/services';
-import {
-  EntryStore,
-  MembershipStore,
-  MetadataStore,
-  UiStore,
-} from '@wbs/core/store';
+import { MembershipStore, MetadataStore, UiStore } from '@wbs/core/store';
 import {
   CategoryViewModel,
   LibraryTaskViewModel,
@@ -70,6 +65,7 @@ import {
   LibraryTaskActionService,
   LibraryImportService,
 } from '../../../../services';
+import { LibraryStore } from '../../../../store';
 import { LibraryTaskDetailsComponent } from '../library-task-details';
 import { LibraryTreeTaskTitleComponent } from '../library-tree-task-title';
 import { LibraryTreeTitleLegendComponent } from '../library-tree-title-legend';
@@ -115,7 +111,7 @@ export class LibraryTreeComponent implements OnInit {
   private readonly reorderer = inject(EntryTaskReorderService);
   private readonly taskService = inject(LibraryTaskService);
   readonly entryService = inject(LibraryService);
-  readonly entryStore = inject(EntryStore);
+  readonly store = inject(LibraryStore);
   readonly width = inject(UiStore).mainContentWidth;
   readonly treeService = new TreeService();
 
@@ -131,7 +127,7 @@ export class LibraryTreeComponent implements OnInit {
 
   readonly showFullscreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
-  readonly isLoading = computed(() => !this.entryStore.version());
+  readonly isLoading = computed(() => !this.store.version());
 
   readonly alert = signal<string | undefined>(undefined);
   readonly taskAreaHeight = signal(0);
@@ -139,10 +135,10 @@ export class LibraryTreeComponent implements OnInit {
   readonly selectedTask = computed(() => {
     const id = this.selectedTaskId();
     if (!id) return undefined;
-    return this.entryStore.viewModels()?.find((x) => x.id === id);
+    return this.store.viewModels()?.find((x) => x.id === id);
   });
   readonly disciplines = computed(() => {
-    let d = this.entryStore.version()!.disciplines;
+    let d = this.store.version()!.disciplines;
 
     if (!d || d.length === 0)
       d = this.metadata.categories.disciplines.map((x) => ({
@@ -154,19 +150,19 @@ export class LibraryTreeComponent implements OnInit {
   });
   readonly showInternal = computed(() => {
     const org = this.membership.membership()?.id;
-    const version = this.entryStore.version()!;
+    const version = this.store.version()!;
 
     return version.visibility === 'public' && org === version.ownerId;
   });
   readonly canEdit = computed(
     () =>
-      this.entryStore.version()!.status === 'draft' &&
-      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.TASKS.UPDATE)
+      this.store.version()!.status === 'draft' &&
+      Utils.contains(this.store.claims(), LIBRARY_CLAIMS.TASKS.UPDATE)
   );
   readonly canCreate = computed(
     () =>
-      this.entryStore.version()!.status === 'draft' &&
-      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.TASKS.CREATE)
+      this.store.version()!.status === 'draft' &&
+      Utils.contains(this.store.claims(), LIBRARY_CLAIMS.TASKS.CREATE)
   );
   readonly pageSize = computed(() =>
     this.treeService.pageSize(
@@ -181,13 +177,11 @@ export class LibraryTreeComponent implements OnInit {
   readonly goFullScreen = output<void>();
 
   constructor() {
-    effect(() =>
-      this.treeService.updateState(this.entryStore.viewModels() ?? [])
-    );
+    effect(() => this.treeService.updateState(this.store.viewModels() ?? []));
   }
 
   ngOnInit(): void {
-    this.treeService.expandedKeys = (this.entryStore.viewModels() ?? [])
+    this.treeService.expandedKeys = (this.store.viewModels() ?? [])
       .filter((x) => !x.parentId)
       .map((x) => x.id);
   }
@@ -219,8 +213,8 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   rowReordered(e: RowReorderEvent): void {
-    const tree = this.entryStore.viewModels()!;
-    const entryType = this.entryStore.version()!.type;
+    const tree = this.store.viewModels()!;
+    const entryType = this.store.version()!.type;
     const dragged: TaskViewModel = e.draggedRows[0].dataItem;
     const target: TaskViewModel = e.dropTargetRow?.dataItem;
     const validation = this.reorderer.validate(
@@ -239,7 +233,7 @@ export class LibraryTreeComponent implements OnInit {
     }
     const run = () => {
       const results = this.reorderer.run(
-        this.entryStore.tasks()!,
+        this.store.tasks()!,
         tree,
         dragged,
         target,
@@ -368,7 +362,7 @@ export class LibraryTreeComponent implements OnInit {
     const taskId = task.id;
     const sender = this.treeList()!;
     const parent = task.parentId
-      ? this.entryStore.viewModels()?.find((x) => x.id === task.parentId)
+      ? this.store.viewModels()?.find((x) => x.id === task.parentId)
       : undefined;
 
     this.treeService
@@ -384,6 +378,6 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   private resetTree(): void {
-    this.entryStore.setTasks(structuredClone(this.entryStore.tasks() ?? []));
+    this.store.setTasks(structuredClone(this.store.tasks() ?? []));
   }
 }

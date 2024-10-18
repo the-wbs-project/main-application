@@ -5,11 +5,13 @@ import { RecordResourceEditorComponent } from '@wbs/components/record-resources/
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LIBRARY_CLAIMS, ContentResource } from '@wbs/core/models';
 import { IdService, Messages, Utils } from '@wbs/core/services';
-import { EntryStore } from '@wbs/core/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { EntryTaskActivityService } from './entry-task-activity.service';
-import { EntryActivityService } from './entry-activity.service';
+import {
+  EntryActivityService,
+  EntryTaskActivityService,
+} from '../../../services';
+import { LibraryStore } from '../store';
 
 @Injectable()
 export class LibraryResourcesService {
@@ -17,33 +19,33 @@ export class LibraryResourcesService {
   private readonly taskActivity = inject(EntryTaskActivityService);
   private readonly data = inject(DataServiceFactory);
   private readonly dialogService = inject(DialogService);
-  private readonly entryStore = inject(EntryStore);
   private readonly messages = inject(Messages);
+  private readonly store = inject(LibraryStore);
 
   //
   //  Computed
   //
   private readonly isDraft = computed(
-    () => this.entryStore.version()?.status === 'draft'
+    () => this.store.version()?.status === 'draft'
   );
   readonly canAdd = computed(
     () =>
       this.isDraft() &&
-      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.RESOURCES.CREATE)
+      Utils.contains(this.store.claims(), LIBRARY_CLAIMS.RESOURCES.CREATE)
   );
   readonly canEdit = computed(
     () =>
       this.isDraft() &&
-      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.RESOURCES.UPDATE)
+      Utils.contains(this.store.claims(), LIBRARY_CLAIMS.RESOURCES.UPDATE)
   );
   readonly canDelete = computed(
     () =>
       this.isDraft() &&
-      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.RESOURCES.DELETE)
+      Utils.contains(this.store.claims(), LIBRARY_CLAIMS.RESOURCES.DELETE)
   );
 
   getRecordsAsync(taskId?: string): Observable<ContentResource[]> {
-    const version = this.entryStore.version()!;
+    const version = this.store.version()!;
 
     return this.data.contentResources.getAsync(
       version.ownerId,
@@ -54,7 +56,7 @@ export class LibraryResourcesService {
   launchAddAsync(
     taskId: string | undefined
   ): Observable<ContentResource | undefined> {
-    const version = this.entryStore.version()!;
+    const version = this.store.version()!;
     const save: (vm: {
       record: Partial<ContentResource>;
       file?: FileInfo;
@@ -90,7 +92,7 @@ export class LibraryResourcesService {
     taskId: string | undefined,
     record: ContentResource
   ): Observable<ContentResource | undefined> {
-    const version = this.entryStore.version()!;
+    const version = this.store.version()!;
     const save: (vm: {
       record: Partial<ContentResource>;
       file?: FileInfo;
@@ -127,7 +129,7 @@ export class LibraryResourcesService {
     taskId: string | undefined,
     record: ContentResource
   ): Observable<boolean> {
-    const version = this.entryStore.version()!;
+    const version = this.store.version()!;
 
     return this.messages.confirm
       .show('General.Confirm', 'Resources.DeleteResourceConfirm')
@@ -168,7 +170,7 @@ export class LibraryResourcesService {
     taskId: string | undefined,
     records: Partial<ContentResource>[]
   ): Observable<ContentResource[]> {
-    const version = this.entryStore.version()!;
+    const version = this.store.version()!;
     let obs: Observable<ContentResource>[] = [];
 
     for (const record of records) {
@@ -201,7 +203,7 @@ export class LibraryResourcesService {
     data: Partial<ContentResource>,
     file?: FileInfo
   ): Observable<ContentResource> {
-    const version = this.entryStore.version()!;
+    const version = this.store.version()!;
     const resource: ContentResource = {
       id: data.id ?? IdService.generate(),
       ownerId: version.ownerId,

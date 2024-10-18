@@ -79,7 +79,7 @@ export class ProjectStore {
     );
   }
 
-  get canEditTasks(): Signal<boolean> {
+  get canUpdateTasks(): Signal<boolean> {
     return computed(() =>
       this.claimStatusCheck(
         this.project(),

@@ -12,8 +12,8 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { UserInfoComponent } from '@wbs/components/user-info';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { sorter } from '@wbs/core/services';
-import { EntryStore } from '@wbs/core/store';
 import { LibraryService } from '../../../../services';
+import { LibraryStore } from '../../../../store';
 import { ContributorDialogComponent } from '../contributor-dialog';
 
 @Component({
@@ -35,7 +35,7 @@ export class ContributorCardComponent {
   private readonly service = inject(LibraryService);
 
   readonly editIcon = faPencil;
-  readonly store = inject(EntryStore);
+  readonly store = inject(LibraryStore);
 
   readonly contributors = computed(
     () =>

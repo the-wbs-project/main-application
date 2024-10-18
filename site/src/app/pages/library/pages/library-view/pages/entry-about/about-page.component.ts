@@ -17,12 +17,12 @@ import {
   CategoryService,
   SaveService,
 } from '@wbs/core/services';
-import { EntryStore } from '@wbs/core/store';
 import { CategorySelection } from '@wbs/core/view-models';
 import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
 import { of } from 'rxjs';
 import { delay, switchMap, tap } from 'rxjs/operators';
 import { LibraryService, LibraryTaskService } from '../../services';
+import { LibraryStore } from '../../store';
 import { ContributorCardComponent } from './components/contributor-card';
 import { DetailsCardComponent } from './components/details-card';
 import { ResourceCardComponent } from './components/resource-card';
@@ -49,7 +49,7 @@ export class AboutPageComponent {
   private readonly prompt = inject(AiPromptService);
   private readonly entryService = inject(LibraryService);
   private readonly taskService = inject(LibraryTaskService);
-  readonly store = inject(EntryStore);
+  readonly store = inject(LibraryStore);
 
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);

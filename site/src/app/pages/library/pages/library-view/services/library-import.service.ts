@@ -7,10 +7,10 @@ import {
 } from '@wbs/components/import-from-library-dialog';
 import { LibraryEntryNode, WbsNode } from '@wbs/core/models';
 import { IdService, sorter } from '@wbs/core/services';
-import { EntryStore } from '@wbs/core/store';
 import { LibraryTaskViewModel } from '@wbs/core/view-models';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { LibraryStore } from '../store';
 import { LibraryTaskService } from './library-task.service';
 import { LibraryService } from './library.service';
 
@@ -18,7 +18,7 @@ import { LibraryService } from './library.service';
 export class LibraryImportService {
   private readonly dialogService = inject(DialogService);
   private readonly entryService = inject(LibraryService);
-  private readonly store = inject(EntryStore);
+  private readonly store = inject(LibraryStore);
   private readonly taskService = inject(LibraryTaskService);
 
   importFromLibraryAsync(taskId?: string): Observable<boolean> {

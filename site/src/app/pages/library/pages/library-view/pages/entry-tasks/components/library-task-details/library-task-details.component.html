@@ -42,12 +42,14 @@
       <div>
         <wbs-task-details-title-editor
           [title]="t.title"
+          [editable]="store.canUpdateTasks()"
           [saveState]="titleSave.state()"
           (save)="titleChanged($event)"
         />
       </div>
       <div class="detail-header">
-        @if (!editDisciplines() && t.disciplines.length > 0) {
+        @if (store.canUpdateTasks() && !editDisciplines() &&
+        t.disciplines.length > 0) {
         <span
           class="d-inline-block pointer tx-10 mg-r-5"
           (click)="editDisciplines.set(true)"
@@ -66,20 +68,7 @@
           (save)="saveDisciplines($event)"
           (cancel)="editDisciplines.set(false)"
         />
-
-        } @else if (t.disciplines.length === 0) {
-
-        <span class="d-inline-block pd-5">
-          <kendo-chip
-            size="small"
-            rounded="full"
-            (contentClick)="editDisciplines.set(true)"
-          >
-            <fa-icon [icon]="addIcon" class="mg-r-5" />
-            Add Disciplines
-          </kendo-chip>
-        </span>
-        } @else {
+        } @else if (t.disciplines.length > 0) {
         <kendo-chip-list>
           @for (d of t.disciplines; track d.id) {
           <kendo-chip
@@ -97,7 +86,20 @@
         <div class="d-inline-block mg-l-10">
           <wbs-save-message [state]="state" />
         </div>
-        } }
+        } } @else if (store.canUpdateTasks()) {
+        <span class="d-inline-block pd-5">
+          <kendo-chip
+            size="small"
+            rounded="full"
+            (contentClick)="editDisciplines.set(true)"
+          >
+            <fa-icon [icon]="addIcon" class="mg-r-5" />
+            Add Disciplines
+          </kendo-chip>
+        </span>
+        } @else {
+        <kendo-chip size="small" rounded="full"> No Disciplines </kendo-chip>
+        }
       </div>
       <div class="detail-header">
         <label>
@@ -106,12 +108,13 @@
       </div>
       <div>
         <wbs-task-details-description-editor
+          [editable]="store.canUpdateTasks()"
           [description]="t.description ?? ''"
           [saveState]="descriptionSave.state()"
           (save)="descriptionChanged($event)"
         />
       </div>
-      @if (entryStore.version()?.visibility === 'public') {
+      @if (store.version()?.visibility === 'public') {
       <div class="detail-header">
         {{ "General.Visibility" | translate }}
         <div class="tx-10 fw-normal fst-italic">

@@ -12,7 +12,6 @@ import {
   WbsNodeService,
   sorter,
 } from '@wbs/core/services';
-import { EntryStore } from '@wbs/core/store';
 import { LibraryVersionViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -20,6 +19,7 @@ import {
   EntryActivityService,
   EntryTaskActivityService,
 } from '../../../services';
+import { LibraryStore } from '../store';
 
 @Injectable()
 export class LibraryTaskService {
@@ -27,7 +27,7 @@ export class LibraryTaskService {
   private readonly activity = inject(EntryTaskActivityService);
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
-  private readonly store = inject(EntryStore);
+  private readonly store = inject(LibraryStore);
 
   private get owner(): string {
     return this.store.version()!.ownerId;

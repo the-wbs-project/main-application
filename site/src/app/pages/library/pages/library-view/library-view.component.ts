@@ -20,10 +20,10 @@ import { ActionButtonComponent } from '@wbs/components/action-button';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { TitleService, Utils } from '@wbs/core/services';
-import { EntryStore } from '@wbs/core/store';
 import { TextTransformPipe } from '@wbs/pipes/text-transform.pipe';
 import { filter, switchMap } from 'rxjs/operators';
 import { LibraryActionService } from './services';
+import { LibraryStore } from './store';
 
 @UntilDestroy()
 @Component({
@@ -44,7 +44,7 @@ export class LibraryViewComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   readonly actions = inject(LibraryActionService);
-  readonly store = inject(EntryStore);
+  readonly store = inject(LibraryStore);
   //
   //  Inputs
   //

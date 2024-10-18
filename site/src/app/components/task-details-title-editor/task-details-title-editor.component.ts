@@ -42,6 +42,7 @@ export class TaskDetailsTitleEditorComponent implements OnChanges {
   //  Inputs & Signals
   //
   readonly title = input.required<string>();
+  readonly editable = input.required<boolean>();
   readonly saveState = input.required<SaveState>();
   readonly editTitle = signal<string>('');
   readonly saving = computed(() => this.saveState() === 'saving');

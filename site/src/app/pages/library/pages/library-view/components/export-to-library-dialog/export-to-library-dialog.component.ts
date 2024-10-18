@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Navigate } from '@ngxs/router-plugin';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogContentBase,
@@ -22,12 +21,13 @@ import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.co
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { SignalStore } from '@wbs/core/services';
-import { EntryStore, MembershipStore, UserStore } from '@wbs/core/store';
+import { NavigationService } from '@wbs/core/services';
+import { MembershipStore, UserStore } from '@wbs/core/store';
 import { TaskViewModel } from '@wbs/core/view-models';
 import { EntryActivityService } from '@wbs/pages/library/services';
 import { delay, tap } from 'rxjs/operators';
 import { environment } from 'src/env';
+import { LibraryStore } from '../../store';
 
 @Component({
   standalone: true,
@@ -49,9 +49,9 @@ import { environment } from 'src/env';
 export class ExportToLibraryDialogComponent extends DialogContentBase {
   private readonly activities = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
-  private readonly entryStore = inject(EntryStore);
+  private readonly store = inject(LibraryStore);
   private readonly membership = inject(MembershipStore);
-  private readonly store = inject(SignalStore);
+  private readonly navigate = inject(NavigationService);
   private readonly userId = inject(UserStore).userId;
   private task: TaskViewModel | undefined;
 
@@ -76,7 +76,7 @@ export class ExportToLibraryDialogComponent extends DialogContentBase {
   }
 
   setup(taskId: string): void {
-    this.task = this.entryStore.viewModels()?.find((x) => x.id === taskId);
+    this.task = this.store.viewModels()?.find((x) => x.id === taskId);
     this.templateTitle.set(this.task?.title ?? '');
   }
 
@@ -87,7 +87,7 @@ export class ExportToLibraryDialogComponent extends DialogContentBase {
 
     this.saveState.set('saving');
 
-    const version = this.entryStore.version()!;
+    const version = this.store.version()!;
 
     this.data.libraryEntries
       .exportTasksAsync(
@@ -124,18 +124,8 @@ export class ExportToLibraryDialogComponent extends DialogContentBase {
   }
 
   nav(): void {
-    this.store
-      .dispatch(
-        new Navigate([
-          '/',
-          this.membership.membership()!.id,
-          'library',
-          'view',
-          this.entryStore.version()?.ownerId,
-          this.newEntryId(),
-          1,
-        ])
-      )
+    this.navigate
+      .toLibraryEntry(this.store.version()!.ownerId, this.newEntryId()!, 1)
       .subscribe(() => this.dialog.close());
   }
 }

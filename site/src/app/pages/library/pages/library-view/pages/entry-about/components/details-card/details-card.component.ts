@@ -10,12 +10,12 @@ import { LibraryTypeTextComponent } from '@wbs/components/_utils/library-type-te
 import { VisibilityTextComponent } from '@wbs/components/_utils/visibility-text.component';
 import { EditableTextComponent } from '@wbs/components/editable-text';
 import { ProjectCategoryEditorComponent } from '@wbs/components/project-category-editor';
-import { EntryStore } from '@wbs/core/store';
 import { SaveService } from '@wbs/core/services';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { LibraryStatusPipe } from '@wbs/pipes/library-status.pipe';
 import { VersionPipe } from '@wbs/pipes/version.pipe';
 import { LibraryService } from '../../../../services';
+import { LibraryStore } from '../../../../store';
 
 @Component({
   standalone: true,
@@ -38,7 +38,7 @@ import { LibraryService } from '../../../../services';
 export class DetailsCardComponent {
   private readonly service = inject(LibraryService);
 
-  readonly store = inject(EntryStore);
+  readonly store = inject(LibraryStore);
   readonly editAlias = signal(false);
   readonly saveAlias = new SaveService();
   readonly saveTitle = new SaveService();

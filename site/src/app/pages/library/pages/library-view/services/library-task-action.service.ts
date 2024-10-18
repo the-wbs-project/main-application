@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { ActionContextMenuItem, ContextMenuItem } from '@wbs/core/models';
 import { MenuService } from '@wbs/core/services';
-import { EntryStore } from '@wbs/core/store';
 import { TaskViewModel } from '@wbs/core/view-models';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Observable } from 'rxjs';
 import { ExportToLibraryDialogComponent } from '../components/export-to-library-dialog';
 import { LIBRARY_TREE_MENU_ITEMS } from '../models';
+import { LibraryStore } from '../store';
 import { LibraryImportService } from './library-import.service';
 import { LibraryTaskService } from './library-task.service';
 
@@ -17,7 +17,7 @@ export class LibraryTaskActionService {
   private readonly dialogService = inject(DialogService);
   private readonly importService = inject(LibraryImportService);
   private readonly menuService = inject(MenuService);
-  private readonly store = inject(EntryStore);
+  private readonly store = inject(LibraryStore);
   private readonly taskService = inject(LibraryTaskService);
 
   buildMenu(task: TaskViewModel | undefined): (ContextMenuItem | Seperator)[] {

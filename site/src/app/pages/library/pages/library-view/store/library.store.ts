@@ -12,7 +12,7 @@ import {
 } from '@wbs/core/view-models';
 
 @Injectable({ providedIn: 'root' })
-export class EntryStore {
+export class LibraryStore {
   private readonly categoryService = inject(CategoryService);
   private readonly transformer = inject(Transformers);
 
@@ -79,7 +79,7 @@ export class EntryStore {
     );
   }
 
-  get canEditTask(): Signal<boolean> {
+  get canUpdateTasks(): Signal<boolean> {
     return computed(() =>
       this.claimStatusCheck(
         this.version(),
@@ -194,7 +194,6 @@ export class EntryStore {
     claims: string[],
     claim: string
   ): boolean {
-    console.log(claim, this.claimCheck(claims, claim));
     return version?.status === 'draft' && this.claimCheck(claims, claim);
   }
 

@@ -13,13 +13,14 @@ import {
   Transformers,
   Utils,
 } from '@wbs/core/services';
-import { EntryStore, MembershipStore } from '@wbs/core/store';
+import { MembershipStore } from '@wbs/core/store';
 import { LibraryVersionViewModel } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { EntryActivityService } from '../../../services/entry-activity.service';
 import { NewVersionDialogComponent } from '../components/new-version-dialog';
 import { PublishVersionDialogComponent } from '../components/publish-version-dialog';
+import { LibraryStore } from '../store';
 
 @Injectable()
 export class LibraryService {
@@ -29,11 +30,11 @@ export class LibraryService {
   private readonly membership = inject(MembershipStore);
   private readonly messages = inject(Messages);
   private readonly navigate = inject(NavigationService);
-  private readonly entryStore = inject(EntryStore);
+  private readonly store = inject(LibraryStore);
   private readonly transformers = inject(Transformers);
 
   private get version(): LibraryVersionViewModel {
-    return this.entryStore.version()!;
+    return this.store.version()!;
   }
 
   private get contextOrganizationId(): string {
@@ -55,8 +56,8 @@ export class LibraryService {
   downloadTasks(): void {
     this.messages.notify.info('General.RetrievingData');
 
-    const version = this.entryStore.version()!;
-    const tasks = structuredClone(this.entryStore.viewModels()!);
+    const version = this.store.version()!;
+    const tasks = structuredClone(this.store.viewModels()!);
 
     for (const task of tasks) {
       task.childrenIds = [];
@@ -75,8 +76,8 @@ export class LibraryService {
     ProjectCreationComponent.launchAsync(
       this.dialogService,
       this.contextOrganizationId,
-      this.entryStore.version()!,
-      this.entryStore.tasks()!
+      this.store.version()!,
+      this.store.tasks()!
     )
       .pipe(
         filter((x) => x != undefined && !(x instanceof DialogCloseResult)),
@@ -88,7 +89,7 @@ export class LibraryService {
   createNewVersion(): void {
     NewVersionDialogComponent.launch(
       this.dialogService,
-      this.entryStore.versions()!,
+      this.store.versions()!,
       this.version,
       (version: number, alias: string) => {
         return this.saveNewVersion(version, alias);
@@ -148,7 +149,7 @@ export class LibraryService {
 
     return this.data.libraryEntries
       .putVersionAsync(version.ownerId, model)
-      .pipe(map(() => this.entryStore.setVersion(version)));
+      .pipe(map(() => this.store.setVersion(version)));
   }
 
   categoryChangedAsync(category: string): Observable<void> {
@@ -312,8 +313,8 @@ export class LibraryService {
             'General.Success',
             'Wbs.PublishedToLibraryMessage'
           );
-          this.entryStore.setVersion(version);
-          this.entryStore.setClaims(claims);
+          this.store.setVersion(version);
+          this.store.setClaims(claims);
         });
     });
   }
@@ -336,8 +337,8 @@ export class LibraryService {
               this.data.libraryEntryVersions.putAsync(entry.owner, version)
             ),
             tap(() => {
-              this.entryStore.setEntry(entry);
-              this.entryStore.setVersion(version);
+              this.LibraryStore.setEntry(entry);
+              this.LibraryStore.setVersion(version);
 
               this.messages.report.success(
                 'General.Success',

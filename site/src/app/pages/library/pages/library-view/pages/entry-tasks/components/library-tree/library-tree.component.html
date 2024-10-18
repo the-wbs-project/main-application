@@ -1,4 +1,4 @@
-@let tree = entryStore.viewModels() ?? [];
+@let tree = store.viewModels() ?? [];
 <!---->
 @let editEnabled = canEdit();
 <!---->
@@ -38,7 +38,7 @@
     >
       <ng-template kendoTreeListToolbarTemplate>
         <div class="d-flex row-column align-items-center" style="gap: 10px">
-          @if (canCreate() && entryStore.version()?.type === 'project') {
+          @if (canCreate() && store.version()?.type === 'project') {
           <wbs-tree-buttons-add (selected)="addPhase($event)" />
           }
           <wbs-tree-buttons-toggler
@@ -67,7 +67,7 @@
           {{ "Wbs.Activity_Title" | translate }} &nbsp;
           <wbs-library-tree-title-legend
             [canEdit]="editEnabled"
-            [visibility]="entryStore.version()?.visibility"
+            [visibility]="store.version()?.visibility"
           />
         </ng-template>
         <ng-template kendoTreeListCellTemplate let-dataItem>

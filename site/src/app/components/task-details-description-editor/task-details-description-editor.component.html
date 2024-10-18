@@ -8,6 +8,7 @@
   [disabled]="saving()"
   (keydown)="keydown($event)"
 >
+  @if (editable()) {
   <kendo-textarea-suffix>
     <div class="mg-r-5">
       <wbs-save-message [state]="saveState()" />
@@ -47,4 +48,5 @@
     </button>
     } }
   </kendo-textarea-suffix>
+  }
 </kendo-textarea>

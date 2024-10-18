@@ -41,6 +41,7 @@ import {
   ProjectViewService,
 } from '../../../../services';
 import { TaskDetailsResourcesComponent } from '../task-details-resources';
+import { ProjectStore } from '../../../../stores';
 
 @Component({
   standalone: true,
@@ -70,6 +71,7 @@ export class PhaseTaskDetailsComponent implements OnChanges {
   private readonly menuService = inject(ProjectTaskMenuService);
   private readonly taskService = inject(ProjectTaskService);
   private readonly viewService = inject(ProjectViewService);
+  readonly store = inject(ProjectStore);
 
   readonly addIcon = faPlus;
   readonly editIcon = faPencil;

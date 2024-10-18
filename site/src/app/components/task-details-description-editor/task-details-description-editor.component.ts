@@ -41,6 +41,7 @@ export class TaskDetailsDescriptionEditorComponent implements OnChanges {
   //
   //  Inputs & Signals
   //
+  readonly editable = input.required<boolean>();
   readonly description = input.required<string>();
   readonly saveState = input.required<SaveState>();
   readonly editDescription = signal<string>('');

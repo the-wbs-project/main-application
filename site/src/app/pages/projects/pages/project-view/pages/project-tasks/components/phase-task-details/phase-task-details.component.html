@@ -42,6 +42,7 @@
       <div>
         <wbs-task-details-title-editor
           [title]="t.title"
+          [editable]="store.canUpdateTasks()"
           [saveState]="titleSave.state()"
           (save)="saveTitle($event)"
         />
@@ -107,6 +108,7 @@
       </div>
       <div>
         <wbs-task-details-description-editor
+          [editable]="store.canUpdateTasks()"
           [description]="t.description ?? ''"
           [saveState]="descriptionSave.state()"
           (save)="descriptionChanged($event)"

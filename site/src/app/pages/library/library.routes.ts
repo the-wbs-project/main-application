@@ -4,7 +4,6 @@ import { DialogModule } from '@progress/kendo-angular-dialog';
 import {
   EntryActivityService,
   EntryTaskActivityService,
-  LibraryResourcesService,
   watcherGuard,
 } from './services';
 import { Store } from '@ngxs/store';
@@ -21,7 +20,6 @@ export const routes: Routes = [
       importProvidersFrom([DialogModule]),
       EntryActivityService,
       EntryTaskActivityService,
-      LibraryResourcesService,
     ],
     children: [
       {
@@ -39,7 +37,9 @@ export const routes: Routes = [
       {
         path: 'view',
         loadChildren: () =>
-          import('./pages/library-view/library-view.routes').then((x) => x.routes),
+          import('./pages/library-view/library-view.routes').then(
+            (x) => x.routes
+          ),
       },
     ],
   },
