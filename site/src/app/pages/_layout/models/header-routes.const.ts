@@ -21,11 +21,11 @@ export const HEADER_ROUTE_ITEMS: ActionButtonMenuItem[] = [
         resource: 'OrgSettings.Membership',
         claim: ORGANIZATION_CLAIMS.MEMBERS.READ,
       },
-      {
+      /*{
         route: ['/', ':orgId', 'settings', 'labor-rates'],
         resource: 'OrgSettings.LaborRates',
         claim: ORGANIZATION_CLAIMS.LABOR_RATES.READ,
-      },
+      },*/
     ],
   },
 ];
