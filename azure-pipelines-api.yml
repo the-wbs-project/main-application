@@ -18,6 +18,18 @@ pool:
 steps:
   - task: DotNetCoreCLI@2
     inputs:
+      command: "restore"
+      projects: "./server/core/core.csproj"
+    displayName: "Restore Core"
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: "restore"
+      projects: "./server/api/api.csproj"
+    displayName: "Restore API"
+
+  - task: DotNetCoreCLI@2
+    inputs:
       command: "publish"
       publishWebProjects: false
       projects: "./server/api/api.csproj"
