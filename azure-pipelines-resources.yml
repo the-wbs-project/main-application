@@ -15,20 +15,19 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-jobs:
-  steps:
-    - task: ArchiveFiles@2
-      inputs:
-        rootFolderOrFile: "files"
-        includeRootFolder: false
-        archiveType: "zip"
-        archiveFile: "publish/resources/$(Build.BuildId)-Resources.zip"
-        replaceExistingArchive: true
-      displayName: "Zip"
+steps:
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: "files"
+      includeRootFolder: false
+      archiveType: "zip"
+      archiveFile: "publish/resources/$(Build.BuildId)-Resources.zip"
+      replaceExistingArchive: true
+    displayName: "Zip"
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: "publish/resources/"
-        ArtifactName: "drop"
-        publishLocation: "Container"
-      displayName: "Publish"
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "publish/resources/"
+      ArtifactName: "drop"
+      publishLocation: "Container"
+    displayName: "Publish"
