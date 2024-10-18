@@ -31,7 +31,7 @@
   <span>
     {{ viewText() }}
   </span>
-  @if (saveState() !== 'saving') {
+  @if (saveState() !== 'saving' && editable()) {
   <span class="child-to-show">
     <fa-icon
       size="sm"

@@ -47,7 +47,7 @@ export class ProjectCategoryEditorComponent {
   readonly saveIcon = faSave;
   readonly cancelIcon = faXmark;
   readonly infoIcon = faQuestion;
-  readonly canEdit = input.required<boolean>();
+  readonly editable = input.required<boolean>();
   readonly categoryId = input.required<string | undefined>();
   readonly saveMode = input.required<SaveState>();
   readonly category = computed(() =>

@@ -28,10 +28,10 @@ export class ClaimsService {
     return this.getClaims(PROJECT_PERMISSIONS, roles);
   }
 
-  async getForLibraryEntry(organization: string, userId: string, owner: string, version: LibraryEntryVersion): Promise<string[]> {
+  async getForLibraryEntry(userId: string, organization: string, versionOwner: string, version: LibraryEntryVersion): Promise<string[]> {
     const roles = [LIBRARY_ROLES.VIEWER];
 
-    if (organization === owner) {
+    if (organization === versionOwner) {
       if (version.author === userId) roles.push(LIBRARY_ROLES.OWNER);
       if (version.editors?.includes(userId)) roles.push(LIBRARY_ROLES.EDITOR);
     }

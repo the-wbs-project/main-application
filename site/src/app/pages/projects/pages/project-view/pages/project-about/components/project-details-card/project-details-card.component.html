@@ -12,6 +12,7 @@
         [viewText]="project.title"
         [saveState]="saveTitle.state()"
         [editText]="project.title"
+        [editable]="store.canEditProject()"
         (saveText)="titleChanged($event)"
       />
     </div>
@@ -20,7 +21,7 @@
     <div class="row-header">{{ "General.Category" | translate }} :</div>
     <div class="row-value">
       <wbs-project-category-editor
-        [canEdit]="store.canEditProject()"
+        [editable]="store.canEditProject()"
         [categoryId]="project.category"
         [saveMode]="saveCategory.state()"
         (save)="projectCategoryChanged($event)"

@@ -108,6 +108,7 @@ const entryApp = newApp()
   .basePath('api/portfolio/:owner/library/entries/:entry')
   .get('id', verifyJwt, Http.library.getIdAsync)
   .get('recordId', verifyJwt, Http.library.getRecordIdAsync)
+  .get('versions/:version/claims/:organization', verifyJwt, Http.libraryEntries.getVersionClaimsAsync)
   .get('versions/:version/:visibility', verifyJwt, Http.libraryEntries.getVersionByIdAsync)
 
   .put('', verifyJwt, Http.libraryEntries.putEntryAsync)

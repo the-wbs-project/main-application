@@ -36,6 +36,10 @@ export class LibraryService {
     return this.entryStore.version()!;
   }
 
+  private get contextOrganizationId(): string {
+    return this.membership.membership()!.id;
+  }
+
   static getEntryUrl(route: ActivatedRouteSnapshot): string[] {
     return [
       '/',
@@ -68,11 +72,9 @@ export class LibraryService {
   }
 
   createProject(): void {
-    const org = this.membership.membership()!.id;
-
     ProjectCreationComponent.launchAsync(
       this.dialogService,
-      org,
+      this.contextOrganizationId,
       this.entryStore.version()!,
       this.entryStore.tasks()!
     )
@@ -295,11 +297,24 @@ export class LibraryService {
 
       version.lastModified = new Date();
 
-      this.messages.report.success(
-        'General.Success',
-        'Wbs.PublishedToLibraryMessage'
-      );
-      this.entryStore.setVersion(version);
+      //
+      //  I KNOW I KNOW I KNOW, don't do this inside of a subscribe.  Maybe later
+      //
+      this.data.libraryEntries
+        .getClaimsAsync(
+          this.contextOrganizationId,
+          version.ownerId,
+          version.entryId,
+          version.version
+        )
+        .subscribe((claims) => {
+          this.messages.report.success(
+            'General.Success',
+            'Wbs.PublishedToLibraryMessage'
+          );
+          this.entryStore.setVersion(version);
+          this.entryStore.setClaims(claims);
+        });
     });
   }
 

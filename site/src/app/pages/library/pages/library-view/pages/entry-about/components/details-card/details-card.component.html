@@ -16,6 +16,7 @@
         [viewText]="version.title"
         [saveState]="saveTitle.state()"
         [editText]="version.title"
+        [editable]="store.canEditEntry()"
         (saveText)="titleChanged($event)"
       />
     </div>
@@ -27,6 +28,7 @@
         [viewText]="[version.version, version.versionAlias] | version"
         [saveState]="saveAlias.state()"
         [editText]="version.versionAlias"
+        [editable]="store.canEditEntry()"
         (saveText)="aliasChanged($event)"
       />
     </div>
@@ -49,9 +51,9 @@
     <div class="row-header">{{ "General.Category" | translate }} :</div>
     <div class="row-value">
       <wbs-project-category-editor
-        [canEdit]="store.canEditEntry()"
+        [editable]="store.canEditEntry()"
         [categoryId]="version.category"
-        [saveMode]="saveAlias.state()"
+        [saveMode]="saveProjectCategory.state()"
         (save)="projectCategoryChanged($event)"
       />
     </div>

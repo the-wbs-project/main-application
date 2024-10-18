@@ -109,12 +109,10 @@ export class EntryStore {
     tasks: LibraryEntryNode[],
     claims: string[]
   ): void {
-    this._versions.set(versions);
-    this._version.set(version);
-    this._tasks.set(tasks);
-    this._claims.set(claims);
-    this._disciplines.set(this.getDisciplines(version));
-    this._viewModels.set(this.createViewModels(version, tasks));
+    this.setVersions(versions);
+    this.setVersion(version);
+    this.setClaims(claims);
+    this.setTasks(tasks);
   }
 
   setVersion(version: LibraryVersionViewModel): void {
@@ -144,6 +142,10 @@ export class EntryStore {
     if (!version) return;
 
     this._viewModels.set(this.createViewModels(version, tasks));
+  }
+
+  setClaims(claims: string[]): void {
+    this._claims.set(claims);
   }
 
   tasksChanged(upserts: LibraryEntryNode[], removeIds?: string[]): void {
@@ -192,6 +194,7 @@ export class EntryStore {
     claims: string[],
     claim: string
   ): boolean {
+    console.log(claim, this.claimCheck(claims, claim));
     return version?.status === 'draft' && this.claimCheck(claims, claim);
   }
 

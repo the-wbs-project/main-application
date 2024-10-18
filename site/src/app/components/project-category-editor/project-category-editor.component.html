@@ -30,7 +30,7 @@
   </kendo-popover>
   } @else {
   {{ "General.None" | translate }}
-  } @if (saveMode() !== 'saving' && canEdit()) {
+  } @if (saveMode() !== 'saving' && editable()) {
   <span class="child-to-show">
     <fa-icon
       size="sm"

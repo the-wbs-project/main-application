@@ -31,15 +31,26 @@ export class LibraryEntryDataService {
 
   getVersionByIdAsync(
     owner: string,
-    recordId: string,
+    entryId: string,
     version: number,
     nodeVisibility: string
   ): Observable<VersionWithTasksAndClaims> {
     return this.http
       .get<VersionWithTasksAndClaims>(
-        this.url(owner, recordId, version, nodeVisibility)
+        this.url(owner, entryId, version, nodeVisibility)
       )
       .pipe(map((res) => this.clean(res)));
+  }
+
+  getClaimsAsync(
+    organization: string,
+    owner: string,
+    entryId: string,
+    version: number
+  ): Observable<string[]> {
+    return this.http.get<string[]>(
+      this.url(owner, entryId, version, 'claims/' + organization)
+    );
   }
 
   putEntryAsync(entry: LibraryEntry): Observable<LibraryEntry> {

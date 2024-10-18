@@ -47,7 +47,7 @@ export class LibraryEntryHttpService {
 
       if (!entryObj || !versionObj) return ctx.text('Not Found', 404);
 
-      const claims = await ctx.var.claims.getForLibraryEntry(owner, userId, owner, versionObj);
+      const claims = await ctx.var.claims.getForLibraryEntry(userId, owner, owner, versionObj);
       //
       //  Now get users
       //
@@ -70,6 +70,24 @@ export class LibraryEntryHttpService {
       });
     } catch (e) {
       ctx.var.logger.trackException('An error occured trying to get a library entry.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async getVersionClaimsAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, entry, version, organization } = ctx.req.param();
+
+      const userId = ctx.var.userId;
+      const versionId = parseInt(version);
+      const versionObj = await ctx.var.data.libraryVersions.getByIdAsync(owner, entry, versionId);
+
+      if (!versionObj) return ctx.text('Not Found', 404);
+
+      return ctx.json(await ctx.var.claims.getForLibraryEntry(userId, organization, owner, versionObj));
+    } catch (e) {
+      ctx.var.logger.trackException('An error occured trying to get library entry claims.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

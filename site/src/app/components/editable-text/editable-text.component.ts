@@ -36,6 +36,7 @@ export class EditableTextComponent {
   readonly cancelIcon = faXmark;
   readonly viewText = input.required<string>();
   readonly saveState = input.required<SaveState>();
+  readonly editable = input<boolean>(true);
   readonly editText = model<string>();
   readonly editMode = signal(false);
   readonly saveText = output<string>();
