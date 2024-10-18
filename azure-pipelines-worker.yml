@@ -24,10 +24,10 @@ steps:
       versionSpec: "22.0"
     displayName: "Install Node.js"
 
-  - script: npm install --global typescript
+  - script: npm install typescript --global
     displayName: "Install TypeScript"
 
-  - script: npm run deploy:install
+  - script: npm install
     workingDirectory: "worker"
     displayName: "Install"
 
