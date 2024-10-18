@@ -20,9 +20,7 @@ import { Messages, TableHelper } from '@wbs/core/services';
 import { InviteViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
-import { MemberSettingsService } from '../../services';
-import { MembersSettingStore } from '../../store';
-import { IsExpiredPipe } from './is-expired.pipe';
+import { MembershipService, MembershipSettingStore } from '../../services';
 
 @Component({
   standalone: true,
@@ -33,7 +31,6 @@ import { IsExpiredPipe } from './is-expired.pipe';
   imports: [
     ActionIconListComponent,
     DateTextPipe,
-    IsExpiredPipe,
     RoleListPipe,
     SortableDirective,
     SortArrowComponent,
@@ -42,10 +39,10 @@ import { IsExpiredPipe } from './is-expired.pipe';
 })
 export class InvitationListComponent {
   private readonly messages = inject(Messages);
-  private readonly service = inject(MemberSettingsService);
+  private readonly service = inject(MembershipService);
   private readonly tableHelper = inject(TableHelper);
 
-  readonly store = inject(MembersSettingStore);
+  readonly store = inject(MembershipSettingStore);
   readonly filteredRoles = input<string[]>([]);
   readonly textFilter = input<string>('');
   readonly sort = signal<SortDescriptor[]>([{ field: 'name', dir: 'asc' }]);

@@ -10,34 +10,52 @@ public class ProjectFileImporter
         var reader = new UniversalProjectReader();
         var results = new List<ProjectImportResults>();
 
-        using (var stream = new java.io.ByteArrayInputStream(file))
+        using var stream = new java.io.ByteArrayInputStream(file);
+        var project = reader.read(stream);
+
+        foreach (net.sf.mpxj.Task task in project.getTasks().toArray())
         {
-            var project = reader.read(stream);
+            var assignments = task.getResourceAssignments();
+            var folks = new List<string>();
 
-            foreach (net.sf.mpxj.Task task in project.getTasks().toArray())
+            if (assignments.size() > 0)
             {
-                var assignments = task.getResourceAssignments();
-                var folks = new List<string>();
-
-                if (assignments.size() > 0)
+                for (var i = 0; i < assignments.size(); i++)
                 {
-                    for (var i = 0; i < assignments.size(); i++)
-                    {
-                        folks.Add(((net.sf.mpxj.ResourceAssignment)assignments.get(i))?.getResource()?.getName());
-                    }
+                    folks.Add(((net.sf.mpxj.ResourceAssignment)assignments.get(i))?.getResource()?.getName());
                 }
-                results.Add(new ProjectImportResults
-                {
-                    Id = IdService.Create(),
-                    Title = task.getName(),
-                    LevelText = task.getOutlineNumber(),
-                    Resources = folks.Where(x => x != null).ToList()
-                });
             }
-            return new UploadResults
+            results.Add(new ProjectImportResults
             {
-                results = results
-            };
+                Id = IdService.Create(),
+                Title = task.getName(),
+                LevelText = task.getOutlineNumber(),
+                Resources = folks.Where(x => x != null).ToList()
+            });
         }
+        return new UploadResults
+        {
+            results = results
+        };
+    }
+
+    public Dictionary<string, double> GetResources(byte[] file)
+    {
+        var reader = new UniversalProjectReader();
+        var results = new Dictionary<string, double>();
+
+        using var stream = new java.io.ByteArrayInputStream(file);
+        var project = reader.read(stream);
+
+        foreach (net.sf.mpxj.Resource resource in project.getResources().toArray())
+        {
+            var name = resource.getName();
+
+            if (string.IsNullOrWhiteSpace(name)) continue;
+
+            results.Add(name, resource.getStandardRate().getAmount());
+        }
+
+        return results;
     }
 }

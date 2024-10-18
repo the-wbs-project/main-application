@@ -3,10 +3,17 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./settings-layout.component').then(
-        (m) => m.SettingsLayoutComponent
-      ),
-    loadChildren: () => import('./pages/children.routes').then((m) => m.routes),
+    redirectTo: 'membership',
+    pathMatch: 'full',
+  },
+  {
+    path: 'membership',
+    loadChildren: () =>
+      import('./pages/membership/membership.routes').then((m) => m.routes),
+  },
+  {
+    path: 'labor-rates',
+    loadChildren: () =>
+      import('./pages/labor-rates/labor-rates.routes').then((m) => m.routes),
   },
 ];

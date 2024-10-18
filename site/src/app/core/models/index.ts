@@ -38,6 +38,7 @@ export * from './project-node.model';
 export * from './project-to-library-options.model';
 export * from './project-upload-data.model';
 export * from './project.model';
+export * from './rate-table.model';
 export * from './role.model';
 export * from './save-state.type';
 export * from './threaded-discussion.model';

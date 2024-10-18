@@ -6,7 +6,7 @@
 trigger:
   branches:
     include:
-      - main
+      - ardurra
   paths:
     include:
       - site/*

@@ -28,10 +28,11 @@ export class MetadataHttpService {
     const resources = await ctx.var.data.resources.getAsync('en-US');
     const resourceService = new ResourceService(resources!);
 
-    const [projectCategories, phases, disciplines] = await Promise.all([
+    const [projectCategories, phases, disciplines, laborCategories] = await Promise.all([
       MetadataHttpService.getCategoriesAsync(ctx, resourceService, 'project_category'),
       MetadataHttpService.getCategoriesAsync(ctx, resourceService, 'categories_phase'),
       MetadataHttpService.getCategoriesAsync(ctx, resourceService, 'categories_discipline'),
+      MetadataHttpService.getCategoriesAsync(ctx, resourceService, 'labor_categories'),
     ]);
 
     const data = {
@@ -39,6 +40,7 @@ export class MetadataHttpService {
       projectCategories,
       phases,
       disciplines,
+      laborCategories,
     };
 
     await ctx.env.KV_DATA.put(STARTER_DATA_KEY, JSON.stringify(data));
