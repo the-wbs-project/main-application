@@ -10,9 +10,12 @@ trigger:
   paths:
     include:
       - worker/*
-
+      - azure-pipelines-worker.yml
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+
+pool:
+  vmImage: ubuntu-latest
 
 jobs:
   steps:
