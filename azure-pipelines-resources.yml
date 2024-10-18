@@ -9,41 +9,25 @@ trigger:
       - main
   paths:
     include:
-      - worker/*
+      - files/*
 
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 
 jobs:
   steps:
-    - task: NodeTool@0
-      inputs:
-        versionSpec: "22.0"
-      displayName: "Install Node.js"
-
-    - script: npm install --global typescript
-      displayName: "Install TypeScript"
-
-    - script: npm run deploy:install
-      workingDirectory: "worker"
-      displayName: "Install"
-
-    - script: npm run check
-      workingDirectory: "worker"
-      displayName: "Check"
-
     - task: ArchiveFiles@2
       inputs:
-        rootFolderOrFile: "worker"
+        rootFolderOrFile: "files"
         includeRootFolder: false
         archiveType: "zip"
-        archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker.zip"
+        archiveFile: "publish/resources/$(Build.BuildId)-Resources.zip"
         replaceExistingArchive: true
       displayName: "Zip"
 
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+        PathtoPublish: "publish/resources/"
         ArtifactName: "drop"
         publishLocation: "Container"
       displayName: "Publish"

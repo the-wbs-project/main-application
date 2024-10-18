@@ -9,35 +9,29 @@ trigger:
       - main
   paths:
     include:
-      - worker/*
+      - server/*
 
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 
 jobs:
   steps:
-    - task: NodeTool@0
+    - task: DotNetCoreCLI@2
       inputs:
-        versionSpec: "22.0"
-      displayName: "Install Node.js"
-
-    - script: npm install --global typescript
-      displayName: "Install TypeScript"
-
-    - script: npm run deploy:install
-      workingDirectory: "worker"
-      displayName: "Install"
-
-    - script: npm run check
-      workingDirectory: "worker"
-      displayName: "Check"
+        command: "publish"
+        publishWebProjects: false
+        projects: "./server/api/api.csproj"
+        arguments: "-o ./server/api/dist"
+        zipAfterPublish: false
+        modifyOutputPath: true
+      displayName: "Build"
 
     - task: ArchiveFiles@2
       inputs:
-        rootFolderOrFile: "worker"
+        rootFolderOrFile: "server/api/dist/api"
         includeRootFolder: false
         archiveType: "zip"
-        archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker.zip"
+        archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Api.zip"
         replaceExistingArchive: true
       displayName: "Zip"
 
