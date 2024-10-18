@@ -4,12 +4,12 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
- branches:
-   include:
-   - main
- paths:
-   include:
-   - worker/*
+  branches:
+    include:
+      - ardurra
+  paths:
+    include:
+      - worker/*
 
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
