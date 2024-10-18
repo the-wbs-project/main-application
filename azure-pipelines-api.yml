@@ -11,8 +11,6 @@ trigger:
     include:
       - server/*
       - azure-pipelines-api.yml
-variables:
-  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 
 pool:
   vmImage: ubuntu-latest
